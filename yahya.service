@@ -1,11 +1,12 @@
 [Unit]
-Description=Detect Arp Poisoning
+Description=Detect Arp Poisoning Daemon
 
 [Service]
-User=pleycpl
-Group=wheel
+Type=notify
+User=root
+Group=root
 Restart=on-failure
-ExecStart=/usr/bin/yahya -web
+ExecStart=/usr/bin/yahya -detect-arp-poison notimportant
 
 [Install]
 WantedBy=multi-user.target
