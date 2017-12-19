@@ -40,7 +40,7 @@ func main() {
 	case *espeakPtr != "":
 		Util.Espeak(*espeakPtr)
 	case *detectArpPoisonPtr != "":
-		ArpPoison.DetectArpPoison(*detectArpPoisonPtr)
+		ArpPoison.DetectArpPoison()
 	case *webPtr:
 		fmt.Println("Serving localhost:8181")
 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {

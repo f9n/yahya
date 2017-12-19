@@ -8,6 +8,8 @@ import (
 	"net"
 	"sync"
 
+	"github.com/pleycpl/yahya/Util"
+
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
@@ -20,7 +22,7 @@ func AttackArpPoison(ifname string) {
 	fmt.Println("Attack!!!")
 }
 
-func DetectArpPoison(ifname string) {
+func DetectArpPoison() {
 	fmt.Println("Detect")
 	// Get a list of all interfaces.
 	ifaces, err := net.Interfaces()
@@ -100,6 +102,7 @@ func scan(iface *net.Interface) error {
 func readARP(handle *pcap.Handle, iface *net.Interface, stop chan struct{}) {
 	src := gopacket.NewPacketSource(handle, layers.LayerTypeEthernet)
 	in := src.Packets()
+	var count int
 	for {
 		var packet gopacket.Packet
 		select {
@@ -111,15 +114,24 @@ func readARP(handle *pcap.Handle, iface *net.Interface, stop chan struct{}) {
 				continue
 			}
 			arp := arpLayer.(*layers.ARP)
+			fmt.Println(arp.Operation)
+			/*
+				ARPRequest = 1
+				ARPReply = 2
+			*/
 			if arp.Operation != layers.ARPReply || bytes.Equal([]byte(iface.HardwareAddr), arp.SourceHwAddress) {
 				// This is a packet I sent.
-				fmt.Println("Hiiii")
+				fmt.Println("Hiiii, nothing!")
 				continue
 			}
 			// Note:  we might get some packets here that aren't responses to ones we've sent,
 			// if for example someone else sends US an ARP request.  Doesn't much matter, though...
 			// all information is good information :)
 			log.Printf("IP %v is at %v", net.IP(arp.SourceProtAddress), net.HardwareAddr(arp.SourceHwAddress))
+			count++
+			if count > 50 {
+				Util.Espeak("Uhhh, Someone is sending Arp Reply")
+			}
 		}
 	}
 }
