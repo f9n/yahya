@@ -1,0 +1,11 @@
+[Unit]
+Description=Detect Arp Poisoning
+
+[Service]
+User=pleycpl
+Group=wheel
+Restart=on-failure
+ExecStart=/usr/bin/yahya -web
+
+[Install]
+WantedBy=multi-user.target
