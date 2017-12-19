@@ -15,7 +15,7 @@ var (
 	toolVersion = 0.1
 )
 
-func main2() {
+func main() {
 	versionPtr := flag.Bool("version", false, "get tool version")
 	attackPtr := flag.String("attack", "", "attacking ip address with arp method.")
 	gatewayPtr := flag.Bool("check-gateway", false, "checking gateway change")
